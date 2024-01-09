@@ -1,6 +1,6 @@
 **1.1 클라이언트-서버 기반 프로그램 동작 방식**
 
-![client-server](.\images.assets\client-server.PNG)
+![client-server](.\image.assets\client-server.PNG)
 
 * 클라이언트는 처리할 데이터가 있으면, 네트워크를 통해 서버에 전달
 * 서버는 처리한 결과를 네트워크를 통해 클라이언트에 전달
