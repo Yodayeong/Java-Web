@@ -2,6 +2,6 @@
 
 <br>
 
-1. [Web](./WEB)
-2. [STS(Spring Tool Suite)란?](./STS)
+1. [Web](./WEB.md)
+2. [STS(Spring Tool Suite)란?](./STS.md)
 3. 
