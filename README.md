@@ -2,7 +2,7 @@
 
 <br>
 
-1. [Web](./WEB.md)
+1. [Web 동작방식](./WEB.md)
 2. [STS(Spring Tool Suite)란?](./STS.md)
 3. [톰캣으로 웹 애플리케이션 실행하기](./WEB_app.md)
 4. [Process와 Thread의 차이](./thread.md)
