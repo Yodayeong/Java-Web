@@ -66,3 +66,40 @@
 
 <br>
 
+**이클립스에서 웹 애플리케이션 등록**
+
+* 디렉터리 구조
+
+  ![eclipse](./image.assets/eclipse.PNG)
+
+* main.html
+
+  ![html](./image.assets/html.PNG)
+
+* 이클립스와 톰캣 연동
+
+  ![tomcat_server](./image.assets/tomcat_server.PNG)
+
+  ![tomcat_server_2](./image.assets/tomcat_server_2.PNG)
+
+* 연동한 톰캣에 프로젝트 등록
+
+  ![add](./image.assets/add.PNG)
+
+  ![added](./image.assets/added.PNG)
+
+* servers탭의 녹색 실행 버튼으로 톰캣 구동하기
+
+  ![play](./image.assets/play.PNG)
+
+* 포트 충돌 에러
+
+  ![error](./image.assets/error.PNG)
+
+* 포트 새로 지정
+
+  ![port](./image.assets/port.PNG)
+
+* 톰캣 서버 다시 구동 후, http://localhost:8090/webShop/main.html 접속
+
+  ![tomcat_result](./image.assets/tomcat_result.PNG)
