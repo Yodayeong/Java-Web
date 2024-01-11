@@ -7,4 +7,5 @@
 3. [톰캣으로 웹 애플리케이션 실행하기](./WEB_app.md)
 4. [Process와 Thread의 차이](./thread.md)
 5. [Get과 Post의 차이](./GETPOST.md)
-6. [Servlet이란?(FirstServlet 만들기)](./servlet.md)
+6. [자바 접근 제한자(public, protected, default, private)](./java.md)
+7. [Servlet이란?(FirstServlet 만들기)](./servlet.md)
