@@ -72,3 +72,58 @@
 * 이클립스 콘솔 창 확인
 
   ![console](./image.assets/console.PNG)
+
+<br>
+
+**다수의 서블릿 매핑하기**
+
+* SecondServlet Class 생성
+
+  ![second](./image.assets/second.PNG)
+
+  ![secondServlet](./image.assets/secondServlet.PNG)
+
+* web.xml에 class와 url 매핑
+
+  ![xml2](./image.assets/xml2.PNG)
+
+* 톰캣 서버 구동 후, http://localhost:8090/pro05/second 접속
+
+  ![second-url](./image.assets/second-url.PNG)
+
+* 이클립스 콘솔 창 확인
+
+  ![console2](./image.assets/console2.PNG)
+
+<br>
+
+**애너테이션을 이용한 서블릿 매핑**
+
+* web.xml에 서블릿을 설정할 경우 복잡해진다는 단점이 있다.
+* 그래서 애너테이션을 이용해 서블릿 클래스에 직접 설정할 수 있다.
+
+<br>
+
+* Class가 아닌 Servlet으로 ThirdServlet 생성
+
+  ![url_edit](./image.assets/url_edit.PNG)
+
+  ![url_editted](./image.assets/url_editted.PNG)
+
+  * url을 /third로 바꿔주고
+
+  ![check](./image.assets/check.PNG)
+
+  * 오버라이딩 할 생명주기 메서드 체크
+
+  ![thirdServlet](./image.assets/thirdServlet.PNG)
+
+  * WebServlet 애너테이션을 볼 수 있고, 필요한 메서드 수정
+
+* 톰캣 서버를 구동하고 http://localhost:8090/pro05/third 접속
+
+  ![url-third](./image.assets/url-thrid.PNG)
+
+* 이클립스 콘솔 창 확인
+
+  ![console-third](./image.assets/console-third.PNG)
