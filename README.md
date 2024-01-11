@@ -9,3 +9,4 @@
 5. [Get과 Post의 차이](./GETPOST.md)
 6. [자바 접근 제한자(public, protected, default, private)](./java.md)
 7. [Servlet이란?(FirstServlet 만들기)](./servlet.md)
+8. [Servlet에서의 요청 및 응답](./servlet_request.md)
