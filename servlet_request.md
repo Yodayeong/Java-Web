@@ -145,3 +145,29 @@
   ![login2-result](./image.assets/login2-result.PNG)
 
   ![login2-console](./image.assets/login2-console.PNG)
+
+<br>
+
+**자바스크립트로 서블릿에 요청하기**
+
+* 디렉터리 구조
+
+  ![script_directory](./image.assets/script_directory.PNG)
+
+* login2.html
+
+  ![script_html](./image.assets/script_html.PNG)
+
+* LoginServlet5.java
+
+  ![script_servlet](./image.assets/script_servlet.PNG)
+
+* 로그인 실패 화면
+
+  ![script_result](./image.assets/script_result.PNG)
+
+* 로그인 성공 화면 및 콘솔
+
+  ![script_result2](./image.assets/script_result2.PNG)
+
+  ![script_console](./image.assets/script_console.PNG)
