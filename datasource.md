@@ -261,3 +261,7 @@
 
   * command가 addMember인 경우에는 dao의 addMember 메서드에 vo 객체를 전달
   * command가 delMember인 경우에는 dao의 delMember 메서드에 id 값 전달
+  
+* 결과 화면 (http://localhost:8090/pro07/member3)
+
+  ![datasource-front](./image.assets/datasource-front.PNG)
