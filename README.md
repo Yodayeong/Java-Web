@@ -13,3 +13,4 @@
 9. [Servlet에서의 요청 및 응답](./servlet_request.md)
 10. [JDBC와 JDBC Driver](./jdbc.md)
 11. [서블릿의 데이터베이스 연동하기(JDBC Driver/Connection Pool)](./servlet_database.md)
+12. [DataSource 이용해 회원 정보 등록 및 삭제하기](./datasource.md)
