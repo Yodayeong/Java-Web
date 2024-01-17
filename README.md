@@ -12,4 +12,4 @@
 8. [Servlet이란?(FirstServlet 만들기)](./servlet.md)
 9. [Servlet에서의 요청 및 응답](./servlet_request.md)
 10. [JDBC와 JDBC Driver](./jdbc.md)
-11. [서블릿의 데이터베이스 연동하기](./servlet_database.md)
+11. [서블릿의 데이터베이스 연동하기(JDBC Driver/Connection Pool)](./servlet_database.md)
