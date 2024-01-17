@@ -28,5 +28,5 @@
 2. 드라이버 로드 Class.forName()
 3. 계정에 접속 DriverManger.getConnection(,,)
 4. SQL문 분석 conn.prepareStatement(sql)
-5. SQL문 실행 select : executeQuery(), insert, delete, update : executeUpdate()
+5. SQL문 실행 select : executeQuery(), insert, update, delete : executeUpdate()
 6. 접속 끊기 conn.close()
