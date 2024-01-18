@@ -15,3 +15,4 @@
 11. [서블릿의 데이터베이스 연동하기(JDBC Driver/Connection Pool)](./servlet_database.md)
 12. [DataSource 이용해 회원 정보 등록 및 삭제하기](./datasource.md)
 13. [서블릿의 포워드 기능](./forwarding.md)
+14. [서블릿의 바인딩](./binding.md)
