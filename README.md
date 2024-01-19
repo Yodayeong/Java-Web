@@ -16,3 +16,9 @@
 12. [DataSource 이용해 회원 정보 등록 및 삭제하기](./datasource.md)
 13. [서블릿의 포워드 기능](./forwarding.md)
 14. [서블릿의 바인딩](./binding.md)
+
+<br>
+
+**이 외에 정리한 것**
+
+1. [메뉴의 DB화](./menu.md)
