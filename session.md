@@ -6,7 +6,7 @@
 
 <br>
 
-1. hidden 태그를 이용해 웹 페이지 연동하기
+1. hidden 태그를 이용한 웹 페이지 연동
 
    * HTML의 hidden 태그를 이용해 클라이언트의 데이터를 서버에 보냄
 
@@ -243,3 +243,274 @@
        ![url-result1-1](./image.assets/url-result1-1.PNG)
 
        ![url-result1-2](./image.assets/url-result1-2.PNG)
+
+<br>
+
+3. 쿠키를 이용한 웹 페이지 연동 
+
+   * 쿠키란 웹 페이지들 사이의 공유 정보를 클라이언트 PC에 저장해 놓고 필요할 때 여러 웹 페이지들이 공유해서 사용할 수 있도록 매개 역할을 하는 방법
+
+   * 저장 정보 용량에 제한이 있고, 보안에 취약
+
+   * 도메인 당 쿠키가 생성(웹 사이트 당 하나의 쿠키)
+
+   * | 속성                   | Persistence 쿠키                             | Session 쿠키                                 |
+     | ---------------------- | -------------------------------------------- | -------------------------------------------- |
+     | 생성 위치              | 파일로 생성                                  | 브라우저 메모리에 생성                       |
+     | 종료 시기              | 쿠키를 삭제하거나 쿠키 설정 값이 종료된 경우 | 브라우저를 종료한 경우                       |
+     | 최초 접속 시 전송 여부 | 최초 접속 시 서버로 전송                     | 최초 접속 시 서버로 전송되지 않음            |
+     | 용도                   | 로그인 유무 또는 팝업창을 제한할 때          | 사이트 접속 시 Session 인증 정보를 유지할 때 |
+
+     * Session 쿠키
+       * 쿠키 생성 시 setMaxAge()메서드 인자 값이 음수거나, setMaxAge() 메서드를 사용하지 않는 경우
+     * Persistence 쿠키
+       * 쿠키 생성 시 setMaxAge()메서드 인자 값으로 양수 지정
+
+<br>
+
+(1) - Persistence 쿠키
+
+* 브라우저로 사이트에 최초 접속하면, 웹 서버에서 쿠키를 생성해 클라이언트로 전송
+* 그러면 브라우저는 쿠키를 파일로 저장
+  * HttpServletResponse의 addCookie()
+* 이후 재접속하면, 서버는 크라우저에게 쿠키 전송을 요청하고, 브라우저는 쿠키 정보를 서버에 전송
+  * HttpServletRequest의 getCookie()
+
+<br>
+
+* directory 구조
+
+  ![cookie-directory](./image.assets/cookie-directory.PNG)
+
+* SetCookieValue.java
+
+  ```java
+  package sec02.ex01;
+  
+  import java.io.IOException;
+  import java.io.PrintWriter;
+  import java.net.URLEncoder;
+  import java.util.Date;
+  
+  import javax.servlet.ServletException;
+  import javax.servlet.annotation.WebServlet;
+  import javax.servlet.http.Cookie;
+  import javax.servlet.http.HttpServlet;
+  import javax.servlet.http.HttpServletRequest;
+  import javax.servlet.http.HttpServletResponse;
+  
+  @WebServlet("/set")
+  public class SetCookieValue extends HttpServlet {
+  	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  		response.setContentType("text/html;charset=utf-8");
+  		PrintWriter out = response.getWriter();
+  		Date d = new Date();
+  		Cookie c = new Cookie("cookieTest", URLEncoder.encode("JSP프로그래밍입니다.", "utf-8")); //cookieTest이름으로 JSP프로그래밍입니다.라는 정보 저장
+  		c.setMaxAge(24*60*60); //쿠키 유효시간을 24시간으로 설정
+  		
+  		response.addCookie(c); //addCookie() 메서드를 이용해 생성된 쿠키를 브라우저로 전송
+  		out.println("현재시간 : " + d);
+  		out.println("<br>현재시간을 쿠키에 저장합니다.");
+  	}
+  
+  }
+  ```
+
+* GetCookieValue.java
+
+  ```java
+  package sec02.ex01;
+  
+  import java.io.IOException;
+  import java.io.PrintWriter;
+  import java.net.URLDecoder;
+  
+  import javax.servlet.ServletException;
+  import javax.servlet.annotation.WebServlet;
+  import javax.servlet.http.Cookie;
+  import javax.servlet.http.HttpServlet;
+  import javax.servlet.http.HttpServletRequest;
+  import javax.servlet.http.HttpServletResponse;
+  
+  @WebServlet("/get")
+  public class GetCookieValue extends HttpServlet {
+  	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  		response.setContentType("text/html;charset=utf-8");
+  		PrintWriter out = response.getWriter();
+  		
+  		Cookie[] allCookies = request.getCookies(); //getCookies() 메서드를 호출해 브라우저로부터 쿠키를 전달받음
+  		for(int i = 0; i < allCookies.length; i++) {
+  			if (allCookies[i].getName().equals("cookieTest")) {
+  				//cookieTest 이름을 통해 값을 가져옴
+  				out.println(URLDecoder.decode(allCookies[i].getValue(), "utf-8"));
+  			}
+  		}
+  	}
+  
+  }
+  ```
+
+* 톰캣 서버 구동 후, http://localhost:8090/pro09/set 접속
+
+  ![cookie-set](./image.assets/cookie-set.PNG)
+
+  * 현재 시간으로 쿠키가 생성됨
+
+* http://localhost:8090/get 접속
+
+  ![cookie-get](./image.assets/cookie-get.PNG)
+
+  ![cookie-result](./image.assets/cookie-result.PNG)
+
+  * cookieTest 이름으로 값을 가져오고, Cookie가 브라우저에 잘 저장된 것을 볼 수 있다.
+
+<br>
+
+(2) - Session 쿠키
+
+* 쿠키를 파일에 저장하는 것이 아니라 브라우저가 사용하는 메모리에 저장
+* setMaxAge() 메서드를 이용해 유효 시간을 -1로 설정하면 된다.
+
+<br>
+
+* SetCookieValue.java
+
+  ```java
+  package sec02.ex01;
+  
+  import java.io.IOException;
+  import java.io.PrintWriter;
+  import java.net.URLEncoder;
+  import java.util.Date;
+  
+  import javax.servlet.ServletException;
+  import javax.servlet.annotation.WebServlet;
+  import javax.servlet.http.Cookie;
+  import javax.servlet.http.HttpServlet;
+  import javax.servlet.http.HttpServletRequest;
+  import javax.servlet.http.HttpServletResponse;
+  
+  @WebServlet("/set")
+  public class SetCookieValue extends HttpServlet {
+  	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  		response.setContentType("text/html;charset=utf-8");
+  		PrintWriter out = response.getWriter();
+  		Date d = new Date();
+  		Cookie c = new Cookie("cookieTest", URLEncoder.encode("JSP프로그래밍입니다.", "utf-8")); //cookieTest이름으로 JSP프로그래밍입니다.라는 정보 저장
+  		c.setMaxAge(24*60*60); //쿠키 유효시간을 24시간으로 설정
+  		
+  		response.addCookie(c); //addCookie() 메서드를 이용해 생성된 쿠키를 브라우저로 전송
+  		out.println("현재시간 : " + d);
+  		out.println("<br>현재시간을 쿠키에 저장합니다.");
+  	}
+  
+  }
+  ```
+
+* 쿠키 생성 화면
+
+  ![session-cookie](./image.assets/session-cookie.PNG)
+
+<br>
+
+Persistence 쿠키와 Session 쿠키의 차이점
+
+* Persistence 쿠키는 파일로 저장되기 때문에, 브라우저 창을 끄고 다시 켜도 설정한 maxAge에 도달하지 않았다면 쿠키가 그래도 유지된다.
+* Session 쿠키는 브라우저가 사용하는 메모리에 저장되기 때문에, 브라우저 창을 끄고 다시 키면 쿠키가 사라져있다.
+
+<br>
+
+(3) - 쿠키를 이용해 팝업창 제한하기
+
+* 팝업창 제어는 서버에서 쿠키를 다루지 않고 자바스크립트를 이용해 쿠키에 직접 접근
+
+* directory 구조
+
+  ![popup-directory](./image.assets/popup-directory.PNG)
+
+* popUp.html
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <script type="text/javascript">
+  	function setPopUpStart(obj) {
+  		if(obj.checked==true) {
+  			//checkbox가 체크되면, 쿠키 유효시간 한 달 동안 notShowPop 속성이 true를 유지한다.
+  			var expireDate = new Date();
+  			expireDate.setMonth(expireDate.getMonth() + 1);
+  			document.cookie = "notShowPop=" + "true" + ";path=/;" + "expires=" + expireDate.toGMTString();
+  			window.close();
+  		}
+  	}
+  </script>
+  </head>
+  <body>
+  	알림 팝업창입니다.
+  	<br><br><br><br><br><br><br>
+  	<form>
+  		<input type="checkbox" onClick="setPopUpStart(this)">오늘 더 이상 팝업창 띄우지 않기
+  	</form>
+  </body>
+  </html>
+  ```
+
+* popupTest.html
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>자바스크립트에서 쿠키 사용</title>
+  <script type="text/javascript">
+  	//브라우저에 웹 페이지가 load될 때, pageLoad함수를 호출한다.
+  	window.onload = pageLoad;
+  	function pageLoad() {
+  		var notShowPop = getCookieValue();
+  		if(notShowPop != "true") {
+  			//쿠키의 notShowPop가 true가 아니면, 팝업을 띄운다.
+  			window.open("popUp.html", "pop", "width=400, height=500, history=no, resizable=no, scrollbars=yes, menubar=no");
+  		}
+  	}
+  	
+  	function getCookieValue() {
+  		//result의 기본 값을 false로 둔다.
+  		var result = "false";
+  		if(document.cookie != "") {
+  			//cookie가 존재한다면,
+  			//document의 cookie 속성으로 쿠키 정보를 가져오고, 분리 및 정규식을 통해 쿠키 값을 가져온다.
+  			cookie = document.cookie.split(";");
+  			for(var i = 0; i < cookie.length; i++) {
+  				element = cookie[i].split("=");
+  				value = element[0];
+  				value = value.replace(/^\s*/, '');
+  				if(value == "notShowPop") {
+  					//해당 정보를 result에 저장한다.
+  					result = element[1];
+  				}
+  			}
+  		}
+  		//result를 반환한다.
+  		return result;
+  	}
+  	
+  	//쿠키의 notShowPop 속성을 false로 수정한다.
+  	function deleteCookie() {
+  		document.cookie = "notShowPop=" + "false" + ";path=/; expires=-1";
+  	}
+  </script>
+  </head>
+  <body>
+  	<form>
+  		<input type="button" value="쿠키삭제" onClick="deleteCookie()">
+  	</form>
+  </body>
+  </html>
+  ```
+
+* 톰캣 서버 구동 후, http://localhost:8090/pro09/popupTest.html 접속
+
+  ![popup-result](./image.assets/popup-result.PNG)
