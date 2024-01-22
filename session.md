@@ -514,3 +514,67 @@ Persistence 쿠키와 Session 쿠키의 차이점
 * 톰캣 서버 구동 후, http://localhost:8090/pro09/popupTest.html 접속
 
   ![popup-result](./image.assets/popup-result.PNG)
+
+<br>
+
+4. 세션을 이용한 웹 페이지 연동 기능
+   * 정보가 서버의 메모리에 저장된다.
+   * 쿠키보다 보안에 유리하다.
+   * 브라우저(사용자) 당 한 개의 세션(세션 id)이 생성된다.
+   * 세션은 유효 시간을 가진다.(기본 유효 시간은 30분)
+   * 로그인 상태 유지 기능이나 쇼핑몰의 장바구니 담기 기능 등에 주로 사용된다.
+
+<br>
+
+* 실행과정
+  * 브라우저가 서버에 최초 접속하면, 서버의 서블릿은 세션 객체를 생성한 후 세션 id를 브라우저에 전송
+  * 브라우저는 이 세션 id를 브라우저가 사용하는 세션 쿠키에 저장(쿠키 이름은 jsessionId)
+  * 재접속하여 세션 쿠키에 저장된 세션 id(jsessionId)를 다시 서버로 전송하면, 서버에서는 전송된 세션 id를 이용해 브라우저의 세션 객체에 접근하여 브라우저에 대한 작업을 수행
+
+<br>
+
+* directory 구조
+
+  ![session-directory](./image.assets/session-directory.PNG)
+
+* SessionTest.java
+
+  ```java
+  package sec03.ex01;
+  
+  import java.io.IOException;
+  import java.io.PrintWriter;
+  import java.util.Date;
+  
+  import javax.servlet.ServletException;
+  import javax.servlet.annotation.WebServlet;
+  import javax.servlet.http.HttpServlet;
+  import javax.servlet.http.HttpServletRequest;
+  import javax.servlet.http.HttpServletResponse;
+  import javax.servlet.http.HttpSession;
+  
+  @WebServlet("/sess")
+  public class SessionTest extends HttpServlet {
+  	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  		response.setContentType("text/html;charset=utf-8");
+  		PrintWriter out = response.getWriter();
+  		//세션 객체를 생성하거나 기존 세션 반환
+  		HttpSession session = request.getSession();
+  		out.println("세션 아이디 : " + session.getId() + "<br>");
+  		out.println("최초 세션 생성 시각 : " + new Date(session.getCreationTime()) + "<br>");
+  		out.println("최근 세션 접근 시각 : " + new Date(session.getLastAccessedTime()) + "<br>");
+  		if(session.isNew()) {
+  			out.print("새 세션이 만들어졌습니다.");
+  		}
+  	}
+  
+  }
+  ```
+
+* 톰캣 서버 구동 후, http://localhost:8090/sess 접속
+
+  ![session1](./image.assets/session1.PNG)
+
+* 재접속
+
+  ![session2](./image.assets/session2.PNG)
