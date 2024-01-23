@@ -533,6 +533,8 @@ Persistence 쿠키와 Session 쿠키의 차이점
 
 <br>
 
+(1) - 서블릿에서 세션 API 이용하기
+
 * directory 구조
 
   ![session-directory](./image.assets/session-directory.PNG)
@@ -578,3 +580,91 @@ Persistence 쿠키와 Session 쿠키의 차이점
 * 재접속
 
   ![session2](./image.assets/session2.PNG)
+  
+* 세션 유효시간 확인(web.xml)
+
+  ![session-time](./image.assets/session-time.PNG)
+
+* 세션 유효시간 변경하기(SessionTest2.java)
+
+  ```java
+  package sec03.ex02;
+  
+  import java.io.IOException;
+  import java.io.PrintWriter;
+  import java.util.Date;
+  
+  import javax.servlet.ServletException;
+  import javax.servlet.annotation.WebServlet;
+  import javax.servlet.http.HttpServlet;
+  import javax.servlet.http.HttpServletRequest;
+  import javax.servlet.http.HttpServletResponse;
+  import javax.servlet.http.HttpSession;
+  
+  @WebServlet("/sess2")
+  public class SessionTest2 extends HttpServlet {
+  	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  		response.setContentType("text/html;charset=utf-8");
+  		PrintWriter out = response.getWriter();
+  		
+  		HttpSession session = request.getSession();
+  		out.println("세션 아이디 : " + session.getId() + "<br>");
+  		out.println("최초 세션 생성 시각 : " + new Date(session.getCreationTime()) + "<br>");
+  		out.println("최근 세션 접근 시각 : " + new Date(session.getLastAccessedTime()) + "<br>");
+  		out.println("기본 세션 유효 시간 : " + session.getMaxInactiveInterval() + "<br>");
+  		session.setMaxInactiveInterval(5); //세션의 유효 시간을 5초로 설정
+  		out.println("세션 유효 시간 : " + session.getMaxInactiveInterval() + "<br>");
+  		if(session.isNew()) {
+  			out.print("새 세션이 만들어졌습니다.");
+  		}
+  		
+  	}
+  
+  }
+  ```
+
+* 세션이 5초마다 새롭게 생성
+
+  ![session2-result](./image.assets/session2-result.PNG)
+
+* 강제로 세션을 삭제하는 기능(SessionTest3.java)
+
+  ```java
+  package sec03.ex03;
+  
+  import java.io.IOException;
+  import java.io.PrintWriter;
+  import java.util.Date;
+  
+  import javax.servlet.ServletException;
+  import javax.servlet.annotation.WebServlet;
+  import javax.servlet.http.HttpServlet;
+  import javax.servlet.http.HttpServletRequest;
+  import javax.servlet.http.HttpServletResponse;
+  import javax.servlet.http.HttpSession;
+  
+  @WebServlet("/sess3")
+  public class SessionTest3 extends HttpServlet {
+  	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  		response.setContentType("text/html;charset=utf-8");
+  		PrintWriter out = response.getWriter();
+  		
+  		HttpSession session = request.getSession();
+  		out.println("세션 아이디 : " + session.getId() + "<br>");
+  		out.println("최초 세션 생성 시각 : " + new Date(session.getCreationTime()) + "<br>");
+  		out.println("최근 세션 접근 시각 : " + new Date(session.getLastAccessedTime()) + "<br>");
+  		out.println("세션 유효 시간 : " + session.getMaxInactiveInterval() + "<br>");
+  		if(session.isNew()) {
+  			out.print("새 세션이 만들어졌습니다.");
+  		}
+  		session.invalidate(); //invalidate()를 호출해 생성된 세션 객체를 강제로 삭제
+  	}
+  
+  }
+  ```
+
+* 재요청 할 때마다 다른 세션이 생성
+
+  ![inavlidate1](./image.assets/invalidate1.PNG)
+
+  ![inavlidate2](./image.assets/invalidate2.PNG)
