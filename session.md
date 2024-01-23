@@ -668,3 +668,113 @@ Persistence 쿠키와 Session 쿠키의 차이점
   ![inavlidate1](./image.assets/invalidate1.PNG)
 
   ![inavlidate2](./image.assets/invalidate2.PNG)
+
+<br>
+
+(2) - HttpSession의 바인딩 기능(로그인 정보 바인딩)
+
+* 톰캣이 종료된 후에도 세션이 메모리에서 삭제되지 않는 경우가 있으므로 context.xml에서 해당 부분의 주석을 해제
+
+  ![context-xml](./image.assets/context-xml.PNG)
+
+* directory 구조
+
+  ![session-login-directory](./image.assets/session-login-directory.PNG)
+
+* login2.html
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>로그인창</title>
+  </head>
+  <body>
+  	<form name="frmLogin" method="post" action="login" encType="UTF-8">
+  		아이디 :<input type="text" name="user_id"><br>
+  		비밀번호 :<input type="password" name="user_pw"><br>
+  		<input type="submit" value="로그인">
+  		<input type="reset" value="다시 입력">
+  	</form>
+  </body>
+  </html>
+  ```
+
+* SessionTest4.java
+
+  ```java
+  package sec03.ex04;
+  
+  import java.io.IOException;
+  import java.io.PrintWriter;
+  
+  import javax.servlet.ServletException;
+  import javax.servlet.annotation.WebServlet;
+  import javax.servlet.http.HttpServlet;
+  import javax.servlet.http.HttpServletRequest;
+  import javax.servlet.http.HttpServletResponse;
+  import javax.servlet.http.HttpSession;
+  
+  @WebServlet("/login")
+  public class SessionTest4 extends HttpServlet {
+  	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  		doHandle(request, response);
+  	}
+  
+  	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  		doHandle(request, response);
+  	}
+  	
+  	public void doHandle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  		request.setCharacterEncoding("utf-8");
+  		response.setContentType("text/html;charset=utf-8");
+  		PrintWriter out = response.getWriter();
+  		
+  		HttpSession session = request.getSession();
+  		String user_id = request.getParameter("user_id");
+  		String user_pw = request.getParameter("user_pw");
+  		
+  		if(session.isNew()) {
+  			if(user_id != null) {
+  				//로그인창에서 서블릿으로 요청하면 ID가 null이 아님
+  				//=> 세션에 ID를 바인딩
+  				session.setAttribute("user_id", user_id);
+  				out.println("<a href='login'>로그인 상태 확인</a>");
+  			}
+  			else {
+  				out.print("<a href='login2.html'>다시 로그인 하세요!!</a>");
+  				session.invalidate();
+  			}
+  		}
+  		else {
+  			//세션에서 ID를 가져옴
+  			user_id = (String) session.getAttribute("user_id");
+  			if(user_id != null && user_id.length() != 0) {
+  				out.print("안녕하세요 " + user_id + "님!!!");
+  			}
+  			else {
+  				out.print("<a href='login2.html'>다시 로그인 하세요!!</a>");
+  				session.invalidate();
+  			}
+  		}
+  	}
+  
+  }
+  ```
+
+  * setAttribute() 메서드를 통해 세션에 user_id 값을 바이딩한다.
+
+* 톰캣 서버 구동 후, http://localhost:8090/pro09/login2.html 접속
+
+  ![session-login-result](./image.assets/session-login-result.PNG)
+
+  ![session-login-result2](./image.assets/session-login-result2.PNG)
+
+  ![session-login-result3](./image.assets/session-login-result3.PNG)
+
+  * 세션과 user_id 바인딩 후 보이는 창
+
+  ![session-login-result4](./image.assets/session-login-result4.PNG)
+
+  * 세션에 바인딩 된 user_id 출력
