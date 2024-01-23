@@ -778,3 +778,208 @@ Persistence 쿠키와 Session 쿠키의 차이점
   ![session-login-result4](./image.assets/session-login-result4.PNG)
 
   * 세션에 바인딩 된 user_id 출력
+
+<br>
+
+(3) - 세션을 이용한 로그인
+
+* directory 구조
+
+  ![sessionLogin-directory](./image.assets/sessionLogin-directory.PNG)
+
+* login3.html
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>로그인창</title>
+  </head>
+  <body>
+  	<form name="frmLogin" method="post" action="login" encType="UTF-8">
+  		아이디 :<input type="text" name="user_id"><br>
+  		비밀번호 :<input type="password" name="user_pw"><br>
+  		<input type="submit" value="로그인">
+  		<input type="reset" value="다시 입력">
+  	</form>
+  </body>
+  </html>
+  ```
+
+* MemberDAO.java
+
+  ```java
+  package sec05.ex01;
+  
+  import java.sql.Connection;
+  import java.sql.Date;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.util.ArrayList;
+  import java.util.List;
+  
+  import javax.naming.Context;
+  import javax.naming.InitialContext;
+  import javax.sql.DataSource;
+  
+  public class MemberDAO {
+  	private Connection con;
+  	private PreparedStatement pstmt;
+  	private DataSource dataFactory;
+  	
+  	public MemberDAO() {
+  		...
+  	
+  	public boolean isExisted(MemberVO memberVO) {
+  		boolean result = false;
+  		String id = memberVO.getId();
+  		String pwd = memberVO.getPwd();
+  		System.out.println(id + pwd);
+  		try {
+  			con = dataFactory.getConnection();
+  			String query = "select decode(count(*), 1, 'true', 'false') as result from t_member where id=? and pwd=?";
+  			pstmt = con.prepareStatement(query);
+  			pstmt.setString(1, id);
+  			pstmt.setString(2, pwd);
+  			System.out.println("pstmt: " + pstmt);
+  			ResultSet rs = pstmt.executeQuery();
+  			System.out.println("rs: " + rs);
+  			rs.next();
+  			result = Boolean.parseBoolean(rs.getString("result"));
+  			System.out.println("result=" + result);
+  		} catch(Exception e) {
+  			e.printStackTrace();
+  		}
+  		return result;
+  	}
+  	
+  }
+  ```
+
+* LoginServlet.java
+
+  ```java
+  package sec05.ex01;
+  
+  import java.io.IOException;
+  import java.io.PrintWriter;
+  
+  import javax.servlet.ServletException;
+  import javax.servlet.annotation.WebServlet;
+  import javax.servlet.http.HttpServlet;
+  import javax.servlet.http.HttpServletRequest;
+  import javax.servlet.http.HttpServletResponse;
+  import javax.servlet.http.HttpSession;
+  
+  @WebServlet("/login")
+  public class LoginServlet extends HttpServlet {
+  	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  		doHandle(request, response);
+  	}
+  
+  	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  		doHandle(request, response);
+  	}
+  	
+  	public void doHandle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  		request.setCharacterEncoding("utf-8");
+  		response.setContentType("text/html;charset=utf-8");
+  		PrintWriter out = response.getWriter();
+  		
+  		String user_id = request.getParameter("user_id");
+  		String user_pw = request.getParameter("user_pw");
+  		
+  		//MemberVO 객체를 생성하고,
+  		//요청받은 id, pw로 세팅 후,
+  		//dao를 통해 해당 멤버가 데이터베이스에 존재하는 지 체크한다.
+  		MemberVO memberVO = new MemberVO();
+  		memberVO.setId(user_id);
+  		memberVO.setPwd(user_pw);
+  		MemberDAO dao = new MemberDAO();
+  		boolean result = dao.isExisted(memberVO);
+  		
+  		if(result) {
+  			//만약 존재한다면, 세션에 해당 멤버 정보를 저장한다.
+  			HttpSession session = request.getSession();
+  			session.setAttribute("isLogin", true);
+  			session.setAttribute("login.id", user_id);
+  			session.setAttribute("login.pwd", user_pw);
+  			out.print("<html><body>");
+  			out.print("안녕하세요 " + user_id + "님!!!<br>");
+  			out.print("<a href='show'>회원정보보기</a>");
+  			out.print("</body></html>");
+  		}
+  		else {
+  			//존재하지 않는다면, 다시 로그인 창으로 돌아간다.
+  			out.print("<html><body><center>회원 아이디가 틀립니다.");
+  			out.print("<a href='login3.html'>다시 로그인하기</a>");
+  			out.print("</body></html>");
+  		}
+  		
+  	}
+  
+  }
+  ```
+
+* ShowMember.java
+
+  ```java
+  package sec05.ex01;
+  
+  import java.io.IOException;
+  import java.io.PrintWriter;
+  
+  import javax.servlet.ServletException;
+  import javax.servlet.annotation.WebServlet;
+  import javax.servlet.http.HttpServlet;
+  import javax.servlet.http.HttpServletRequest;
+  import javax.servlet.http.HttpServletResponse;
+  import javax.servlet.http.HttpSession;
+  
+  @WebServlet("/show")
+  public class ShowMember extends HttpServlet {
+  	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  		response.setContentType("text/html;charset=utf-8");
+  		PrintWriter out = response.getWriter();
+  		
+  		String id = "", pwd = "";
+  		Boolean isLogin = false;
+  		HttpSession session = request.getSession(false); //세션이 있으면 반환하고, 없으면 null 반환
+  		
+  		if(session != null) {
+  			//세션이 있다면, 로그인 여부를 체크한다.
+  			isLogin = (Boolean) session.getAttribute("isLogin");
+  			if(isLogin == true) {
+  				//로그인 되어있다면, 세션에 저장된 id, pw를 보여준다.
+  				id = (String) session.getAttribute("login.id");
+  				pwd = (String) session.getAttribute("login.pwd");
+  				out.print("<html><body>");
+  				out.print("아이디 : " + id + "<br>");
+  				out.print("비밀번호 : " + pwd + "<br>");
+  				out.print("</body></html>");
+  			}
+  			else {
+  				//로그인 되어 있지 않다면, 로그인 폼으로 돌아간다.
+  				response.sendRedirect("login3.html");
+  			}
+  		}
+  		else {
+  			//세션이 없다면, 로그인 폼으로 돌아간다.
+  			response.sendRedirect("login3.html");
+  		}
+  		
+  	}
+  
+  }
+  ```
+
+* 톰캣 서버 구동 후, http://localhost:8090/pro09/login3.html 접속
+
+  ![sessionLogin1](./image.assets/sessionLogin1.PNG)
+
+  ![sessionLogin2](./image.assets/sessionLogin2.PNG)
+
+  ![sessionLogin3](./image.assets/sessionLogin3.PNG)
+
+  ![sessionLogin4](./image.assets/sessionLogin4.PNG)
