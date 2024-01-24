@@ -7,17 +7,16 @@
 
 **DB에 테이블 생성 - 칼럼**
 
-* MENU_ID
-* MENU_NM (메뉴 이름)
-* MENU_URL (메뉴 클릭 시 이동할 경로)
-* MENU_CLASS (메뉴 앞에 올 아이콘 ..)
-* USE_YN (다음 메뉴의 사용 여부)
-* SORT_NO (메뉴의 순서)
-* COLLAPSE_YN (하위 메뉴의 존재 여부)
-* DEPTH (메뉴의 깊이)
-  * 상위 메뉴는 1
-  * 하위 메뉴는 2
-  * ..
-* PARENT_ID (부모 메뉴)
-  * 상위 메뉴의 SORT_NO
+* menu_id (메뉴 고유번호)
+* menu_name (메뉴 이름)
+* menu_url (메뉴 클릭 시 이동할 경로)
+* parent_id (부모 메뉴)
+  * 상위 메뉴가 있으면, 상위 메뉴의 menu_id
   * 상위 메뉴가 없으면, NULL
+* sort_no (메뉴 순서)
+  * 메뉴 내에서의 순서
+* menu_depth (메뉴 깊이)
+  * 상위 메뉴 1
+  * 하위 메뉴 2
+  * 그 다음 하위 메뉴 3
+  * ...
