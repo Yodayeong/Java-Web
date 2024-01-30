@@ -19,6 +19,7 @@
 17. [Listener API를 통해 로그인 접속자수 표시](./listenerAPI.md)
 18. [JSP란?](./jsp.md)
 19. [JSP - 디렉티브 태그](./directive-tag.md)
+20. [JSP - JSP 스크립트 요소 기능](./scripting_element.md)
 
 <br>
 

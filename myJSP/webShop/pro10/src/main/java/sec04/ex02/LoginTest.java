@@ -23,7 +23,7 @@ public class LoginTest extends HttpServlet {
 		response.setContentType("text/html;charset=utf-8");
 		context = getServletContext();
 		PrintWriter out = response.getWriter();
-		
+	
 		HttpSession session = request.getSession();
 		String user_id = request.getParameter("user_id");
 		String user_pw = request.getParameter("user_pw");

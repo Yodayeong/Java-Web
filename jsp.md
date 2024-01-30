@@ -59,6 +59,14 @@
   * 브라우저에서 hello.jsp를 요청한다.
   * 브러우저의 요청을 받은 톰캣 컨테이너는 해당 JSP 파일을 읽어 들여와 hello_jsp.java 파일로 변환한다.
   * 그리고 브라우저로 HTML 형식의 결과를 전송하여 화면에 표시한다.
+  
+* 톰캣 컨테이너가 변환한 자바 파일과 클래스 파일
+
+  ![hello-compile](./image.assets/hello-compile.PNG)
+
+* hello_jsp.java
+
+  ![hello-compile2](./image.assets/hello-compile2.PNG)
 
 <br>
 
