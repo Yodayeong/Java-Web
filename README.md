@@ -29,4 +29,4 @@
 1. [IP 주소와 포트(Port)](./ip.md)
 1. [자바 length, length(), size()의 차이](./length.md)
 1. [Firebase란?](./firebase.md)
-1. [스토리지(DAS, NAS)](./dasnas.md)
+1. [스토리지(DAS, NAS)](./nasdas.md)
